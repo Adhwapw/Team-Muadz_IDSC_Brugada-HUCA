@@ -24,55 +24,6 @@ Brugada Syndrome is responsible for up to **20% of sudden cardiac deaths** in pa
 
 ---
 
-## Model Architecture
-
-```
-ECG Input (12-lead)
-    │
-    ▼
-┌─────────────────────────────┐
-│  Preprocessing              │
-│  - StandardScaler           │
-│  - Stratified split         │
-│  - WFDB signal loading      │
-└─────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────┐
-│  CNN (Spatial Features)     │
-│  - Conv1D x2                │
-│  - Filters: 64 / 128        │
-│  - Kernel: 5 / 3            │
-│  - MaxPooling1D             │
-└─────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────┐
-│  LSTM (Temporal Patterns)   │
-│  - Units: 128               │
-│  - Dropout: 0.3             │
-│  - Dense: 64-dim output     │
-└─────────────────────────────┘
-    │
-    │  64-dim feature vector
-    │  extracted from Dense layer
-    ▼
-┌─────────────────────────────┐
-│  XGBoost (Meta-Classifier)  │
-│  - Input: 64-dim features   │
-│  - scale_pos_weight: 3.78   │
-│  - Gradient boosting        │
-└─────────────────────────────┘
-    │
-    ▼
-Output: Brugada / Normal
-(threshold = 0.49)
-```
-
-**Loss Function:** Focal Loss — down-weights easy majority-class samples and focuses training on hard Brugada cases to handle the 3.78:1 class imbalance.
-
----
-
 ## Dataset
 
 We exclusively use the **Brugada-HUCA Dataset** from PhysioNet.
@@ -88,12 +39,7 @@ We exclusively use the **Brugada-HUCA Dataset** from PhysioNet.
 
 **Download the dataset:**
 1. Go to [https://physionet.org/content/brugada-huca/1.0.0/](https://physionet.org/content/brugada-huca/1.0.0/)
-2. Create a free PhysioNet account
-3. Sign the data use agreement
-4. Download and place in the `/data` directory
-
-> ⚠️ External labeled datasets are strictly prohibited per IDSC 2026 rules. Only the official PhysioNet datasets are used.
-
+2. Download and place in the `/data` directory
 ---
 
 ## Results
@@ -167,19 +113,6 @@ jupyter
 
 ---
 
-## Repository Structure
-
-```
-├── CNN__LSTM__XGBoost.ipynb   # Main notebook (full pipeline)
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-└── figures/
-    ├── viz_fig1_eval.png        # Confusion matrix + ROC curve
-    ├── viz_fig2_cv.png          # Cross-validation performance
-    ├── viz_fig3_learning.png    # Learning curves
-    └── viz_fig4_metrics.png     # Final test metrics
-```
-
 ---
 
 ## Ethical AI Statement
@@ -197,15 +130,18 @@ jupyter
 If you use this work, please cite the dataset:
 
 ```
-Martínez-Rodrigo, A., et al. (2023). Brugada Syndrome ECG Database
-(Brugada-HUCA) (version 1.0.0). PhysioNet.
-https://doi.org/10.13026/8qm8-g327
+Costa Cortez, N., & Garcia Iglesias, D. (2026). Brugada-HUCA: 
+12-Lead ECG Recordings for the Study of Brugada Syndrome 
+(version 1.0.0). PhysioNet. 
+https://doi.org/10.13026/0m2w-dy83
 ```
 
 ```
-Goldberger, A., et al. (2000). PhysioBank, PhysioToolkit, and PhysioNet:
-Components of a new research resource for complex physiologic signals.
-Circulation, 101(23), e215–e220.
+Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., 
+Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, 
+and PhysioNet: Components of a new research resource for complex 
+physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220. 
+RRID:SCR_007345.
 ```
 
 ---
